@@ -3,330 +3,510 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>猪包边框</title>
+    <title>猪包边框 | 画廊级质感生成</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐽</text></svg>">
+    <!-- 核心依赖保留 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
     <style>
-        /* === 核心样式复刻：深海琉璃版 === */
+        /* === 苹果风科技感设计系统 === */
         :root {
-            --bg-color: #F4F9FD;
-            --text-color: #021024;
-            --title-color: #052659;
-            --subtitle-color: #5483B3;
-            --border-color: #7DA0CA;
-            --btn-start: #052659;
-            --btn-end: #5483B3;
-            --label-bg: #C1E8FF;
+            /* 核心渐变色彩体系 - 低饱和蓝紫主调+暖橙点缀 */
+            --gradient-primary: linear-gradient(135deg, #5B7FFF 0%, #936BFF 100%);
+            --gradient-secondary: linear-gradient(135deg, #FF8A65 0%, #FF6B8B 100%);
+            --gradient-glass: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04));
+            
+            /* 中性色体系 - 苹果风高级灰阶 */
+            --bg-base: #0D1117;
+            --bg-surface: rgba(255, 255, 255, 0.06);
+            --border-glass: rgba(255, 255, 255, 0.14);
+            --border-highlight: rgba(255, 255, 255, 0.24);
+            --text-primary: #F0F6FF;
+            --text-secondary: #94A3B8;
+            --text-tertiary: #64748B;
+
+            /* 效果常量 - 统一秩序规范 */
+            --radius-sm: 12px;
+            --radius-md: 16px;
+            --radius-lg: 24px;
+            --radius-xl: 32px;
+            --blur-glass: 24px;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 16px 48px rgba(91, 127, 255, 0.15);
+            --transition-smooth: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* 全局重置与基础设定 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-color);
-            background-image: linear-gradient(to bottom, #E3F2FD 0%, #F4F9FD 400px);
-            color: var(--text-color);
-            font-family: "Source Han Sans CN", "Microsoft YaHei", sans-serif;
             min-height: 100vh;
+            /* 苹果风渐变背景 - 多层径向渐变打造深度 */
+            background: 
+                radial-gradient(circle at 20% 20%, rgba(91, 127, 255, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(147, 107, 255, 0.15), transparent 50%),
+                radial-gradient(circle at 40% 90%, rgba(255, 138, 101, 0.08), transparent 40%),
+                var(--bg-base);
+            color: var(--text-primary);
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "PingFang SC", "Microsoft YaHei", sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
+            overflow-x: hidden;
         }
 
-        /* 容器 */
+        /* 容器规范 - 固定最大宽度+响应式内边距 */
         .container {
-            width: 90%;
-            max-width: 600px;
-            padding: 20px 0;
+            width: 92%;
+            max-width: 720px;
+            padding: 48px 0 80px;
         }
 
-        /* 标题 */
+        /* === 标题区域 - 苹果风排版层级 === */
         h1 {
-            font-weight: 900;
-            color: var(--title-color);
-            font-size: 36px;
+            font-weight: 800;
+            font-size: 42px;
             text-align: center;
-            margin-bottom: 5px;
-            letter-spacing: -1px;
-            text-shadow: 0px 2px 0px rgba(255,255,255,0.8);
+            margin-bottom: 8px;
+            letter-spacing: -0.5px;
+            /* 渐变文字效果 */
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: titleFloat 6s ease-in-out infinite;
         }
 
-        @media (min-width: 768px) {
-            h1 { font-size: 46px; }
+        @keyframes titleFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
         }
 
         .subtitle {
             font-weight: 400;
-            font-size: 15px;
-            color: var(--subtitle-color);
+            font-size: 16px;
+            color: var(--text-secondary);
             text-align: center;
-            margin-top: 5px;
-            margin-bottom: 40px;
-            letter-spacing: 1.5px;
+            margin-bottom: 48px;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
         }
 
-        /* 上传区域 */
+        /* 响应式标题适配 */
+        @media (min-width: 768px) {
+            h1 { font-size: 56px; }
+            .subtitle { font-size: 18px; }
+        }
+
+        @media (max-width: 480px) {
+            h1 { font-size: 36px; }
+            .container { padding: 32px 0 64px; }
+        }
+
+        /* === 上传区域 - 核心毛玻璃玻璃态设计 === */
         .upload-area {
-            background-color: rgba(255, 255, 255, 0.7);
-            border: 2px dashed var(--border-color);
-            border-radius: 16px;
-            padding: 40px 20px;
+            background: var(--gradient-glass);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border: 1px dashed var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 56px 24px;
             text-align: center;
             cursor: pointer;
-            background-image: repeating-linear-gradient(
-                45deg,
-                rgba(193, 232, 255, 0.1),
-                rgba(193, 232, 255, 0.1) 10px,
-                rgba(255, 255, 255, 0.1) 10px,
-                rgba(255, 255, 255, 0.1) 20px
-            );
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: var(--transition-smooth);
             position: relative;
             overflow: hidden;
         }
 
+        /* 上传区hover/拖拽状态 - 苹果风高亮反馈 */
         .upload-area:hover, .upload-area.dragover {
-            border-color: var(--title-color);
+            border-color: var(--border-highlight);
             border-style: solid;
-            background-color: #FFFFFF;
-            box-shadow: 0 15px 40px rgba(5, 38, 89, 0.1);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
+            box-shadow: var(--shadow-lg), 0 0 40px rgba(91, 127, 255, 0.2);
             transform: translateY(-2px);
         }
 
+        .upload-area::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, rgba(91, 127, 255, 0.1), transparent 70%);
+            opacity: 0;
+            transition: var(--transition-smooth);
+            pointer-events: none;
+        }
+
+        .upload-area:hover::before, .upload-area.dragover::before {
+            opacity: 1;
+        }
+
         .upload-icon {
-            color: var(--subtitle-color);
-            width: 45px;
-            height: 45px;
-            margin-bottom: 15px;
-            filter: drop-shadow(0px 4px 6px rgba(84, 131, 179, 0.2));
+            color: var(--text-secondary);
+            width: 56px;
+            height: 56px;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.2));
+            transition: var(--transition-smooth);
+        }
+
+        .upload-area:hover .upload-icon {
+            color: var(--text-primary);
+            transform: translateY(-4px);
         }
 
         .upload-text {
-            color: var(--title-color);
-            font-size: 16px;
+            color: var(--text-primary);
+            font-size: 18px;
             font-weight: 600;
             display: block;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            letter-spacing: 0.3px;
         }
 
         .upload-btn {
-            background: linear-gradient(135deg, #7DA0CA 0%, #5483B3 100%);
+            background: var(--gradient-primary);
             color: #FFFFFF;
-            border-radius: 8px;
-            padding: 10px 24px;
+            border-radius: var(--radius-md);
+            padding: 12px 32px;
             font-weight: 600;
-            font-size: 14px;
+            font-size: 15px;
             border: none;
-            box-shadow: 0 4px 10px rgba(84, 131, 179, 0.3);
+            box-shadow: 0 8px 20px rgba(91, 127, 255, 0.3);
             cursor: pointer;
-            transition: all 0.2s;
+            transition: var(--transition-smooth);
             display: inline-block;
+            letter-spacing: 0.3px;
+        }
+
+        .upload-btn:hover {
+            transform: scale(1.03);
+            box-shadow: 0 12px 28px rgba(91, 127, 255, 0.4);
+            filter: brightness(1.08);
+        }
+
+        .upload-btn:active {
+            transform: scale(0.98);
         }
 
         #fileInput { display: none; }
 
-        /* 结果展示区 */
+        /* === 移动端提示 === */
+        .mobile-tip {
+            background: var(--gradient-glass);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border: 1px solid var(--border-glass);
+            padding: 14px 16px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 24px;
+            display: none;
+            line-height: 1.5;
+        }
+
+        /* === 加载动画 - 苹果风环形加载 === */
+        .loader {
+            display: none;
+            margin: 32px auto;
+            width: 40px;
+            height: 40px;
+            position: relative;
+        }
+
+        .loader::before, .loader::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            border: 3px solid transparent;
+        }
+
+        .loader::before {
+            border-top-color: rgba(91, 127, 255, 0.4);
+            animation: spin 1.2s linear infinite;
+        }
+
+        .loader::after {
+            border-top-color: #5B7FFF;
+            animation: spin 0.6s linear infinite reverse;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* === 演示区域 - 玻璃态容器 === */
+        .demo-area {
+            width: 100%;
+            margin-top: 48px;
+            text-align: center;
+        }
+
+        .demo-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-tertiary);
+            font-size: 15px;
+            letter-spacing: 2px;
+            margin-bottom: 32px;
+            font-weight: 500;
+        }
+
+        .demo-title::before, .demo-title::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px dashed var(--border-glass);
+            margin: 0 16px;
+        }
+
+        .demo-grid {
+            display: flex;
+            gap: 32px;
+            justify-content: center;
+            align-items: flex-end;
+            padding: 32px 24px;
+            background: var(--gradient-glass);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+        }
+
+        .demo-col {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .demo-col:first-child { flex: 0 0 44%; }
+        .demo-col:last-child { flex: 0 0 54%; }
+
+        .demo-img {
+            width: 100% !important;
+            height: auto !important;
+            border: 8px solid #FFFFFF;
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-md);
+            pointer-events: none;
+            box-sizing: border-box;
+        }
+
+        .demo-caption {
+            font-size: 13px;
+            color: var(--text-tertiary);
+            margin-top: 16px;
+        }
+
+        .img-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .demo-col:last-child .img-label {
+            background: var(--gradient-primary);
+            color: #FFFFFF;
+            padding: 4px 12px;
+            border-radius: 999px;
+        }
+
+        /* 移动端演示区适配 */
+        @media (max-width: 600px) {
+            .demo-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 24px;
+                padding: 24px 16px;
+            }
+            .demo-col:first-child, .demo-col:last-child {
+                flex: 0 0 auto;
+                width: 100%;
+                max-width: 320px;
+            }
+        }
+
+        /* === 结果展示区 === */
         .result-container {
-            margin-top: 30px;
+            margin-top: 32px;
             width: 100%;
         }
 
         .card {
-            margin-bottom: 40px;
-            animation: fadeIn 0.5s ease;
+            margin-bottom: 32px;
+            animation: fadeInUp 0.5s ease;
+            background: var(--gradient-glass);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 20px;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(16px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .result-img {
             width: 100%;
-            aspect-ratio: 3 / 4; 
+            aspect-ratio: 3 / 4;
             object-fit: contain;
             height: auto;
             border: 10px solid #FFFFFF;
-            border-radius: 6px;
-            box-shadow: 0 15px 35px rgba(2, 16, 36, 0.1);
+            border-radius: var(--radius-sm);
+            box-shadow: var(--shadow-md);
             display: block;
         }
 
         .card-controls {
             display: flex;
             align-items: center;
-            margin-top: 15px;
-            gap: 15px;
+            margin-top: 20px;
+            gap: 16px;
         }
 
         .index-badge {
-            background-color: #F0F4F8;
-            color: var(--subtitle-color);
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-weight: bold;
-            min-width: 40px;
+            background: rgba(255, 255, 255, 0.08);
+            color: var(--text-secondary);
+            padding: 14px 16px;
+            border-radius: var(--radius-md);
+            font-weight: 700;
+            min-width: 48px;
             text-align: center;
+            border: 1px solid var(--border-glass);
         }
 
         .download-btn {
             flex: 1;
-            background: linear-gradient(135deg, var(--btn-start) 0%, var(--btn-end) 100%);
+            background: var(--gradient-primary);
             color: #FFFFFF;
             border: none;
-            border-radius: 10px;
-            padding: 12px 20px;
+            border-radius: var(--radius-md);
+            padding: 14px 20px;
             font-size: 16px;
             font-weight: 600;
-            letter-spacing: 1px;
-            box-shadow: 0 10px 25px rgba(5, 38, 89, 0.2);
+            letter-spacing: 0.3px;
+            box-shadow: 0 8px 20px rgba(91, 127, 255, 0.25);
             cursor: pointer;
             text-align: center;
             text-decoration: none;
-            transition: transform 0.2s;
+            transition: var(--transition-smooth);
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
         }
 
+        .download-btn:hover {
+            transform: scale(1.02);
+            filter: brightness(1.08);
+            box-shadow: 0 12px 28px rgba(91, 127, 255, 0.35);
+        }
+
         .download-btn:active { transform: scale(0.98); }
 
         .download-btn.secondary {
-            background: #FFFFFF;
-            border: 1px solid var(--border-color);
-            color: var(--title-color);
-            box-shadow: none;
+            background: var(--gradient-glass);
+            backdrop-filter: blur(var(--blur-glass));
+            -webkit-backdrop-filter: blur(var(--blur-glass));
+            border: 1px solid var(--border-highlight);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .download-btn.secondary:hover {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.16), rgba(255, 255, 255, 0.08));
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .divider {
             border: 0;
-            border-top: 1px dashed var(--label-bg);
-            margin: 30px 0;
+            border-top: 1px dashed var(--border-glass);
+            margin: 24px 0 0;
         }
 
-        /* 底部版权 */
+        /* === 批量下载容器 === */
+        #batchDownloadContainer {
+            display: none;
+            margin-top: 24px;
+        }
+
+        #zipBtn {
+            width: 100%;
+            background: var(--gradient-secondary);
+            box-shadow: 0 8px 20px rgba(255, 107, 139, 0.25);
+        }
+
+        #zipBtn:hover {
+            box-shadow: 0 12px 28px rgba(255, 107, 139, 0.35);
+        }
+
+        /* === 底部版权 === */
         .footer {
             text-align: center;
-            color: var(--border-color);
-            font-size: 12px;
-            margin: 50px 0 20px 0;
-            opacity: 0.8;
-        }
-
-        /* 加载动画 */
-        .loader {
-            display: none;
-            margin: 20px auto;
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid var(--subtitle-color);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        
-        /* 移动端提示 */
-        .mobile-tip {
-            background-color: #E3F2FD;
-            padding: 12px;
-            border-radius: 8px;
-            color: var(--title-color);
+            color: var(--text-tertiary);
             font-size: 13px;
-            text-align: center;
-            margin-bottom: 20px;
-            border: 1px solid var(--label-bg);
-            display: none;
+            margin: 64px 0 20px;
+            letter-spacing: 0.5px;
         }
 
-        /* === 演示区样式 === */
-        .demo-area {
-            width: 100%;
-            margin-top: 40px;
-            text-align: center;
+        /* 滚动条美化 - 苹果风 */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
         }
-        .demo-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--subtitle-color);
-            font-size: 16px;
-            letter-spacing: 2px;
-            margin-bottom: 30px;
-            opacity: 0.8;
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
         }
-        .demo-title::before, .demo-title::after {
-            content: "";
-            flex: 1;
-            border-bottom: 1px dashed var(--border-color);
-            margin: 0 15px;
+
+        ::-webkit-scrollbar-thumb {
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 999px;
         }
-        .demo-grid {
-            display: flex;
-            gap: 30px; /* 稍微缩小一点间距 */
-            justify-content: center;
-            /* 🔑 保持底部分割线对齐，看着更高级 */
-            align-items: flex-end; 
-        }
-        .demo-col {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-        /* 🔑 新增：设定左侧格子更窄 (约占 44%) */
-        .demo-col:first-child {
-            flex: 0 0 44%; 
-        }
-        /* 🔑 新增：设定右侧格子更宽 (约占 54%，实现稍微放大的效果) */
-        .demo-col:last-child {
-            flex: 0 0 54%; 
-        }
-        .demo-img {
-            /* 🔑 删除了固定高度限制 */
-            /* height: 350px !important; */
-            
-            /* 🔑 宽度铺满各自的格子，根据胖瘦自动伸缩，自然贴合不留白 */
-            width: 100% !important;   
-            height: auto !important;
-            
-            border: 8px solid #FFFFFF;
-            border-radius: 6px;
-            box-shadow: 0 10px 25px rgba(2, 16, 36, 0.08);
-            pointer-events: none; 
-            box-sizing: border-box; /* 确保白边不撑破格子 */
-        }
-        .demo-caption {
-            font-size: 12px;
-            color: var(--subtitle-color);
-            margin-top: 20px;
-            opacity: 0.8;
-        }
-        /* 手机端竖向排列自动适配 (手机上依然等宽更好看) */
-        @media (max-width: 600px) {
-            .demo-grid { flex-direction: column; align-items: center; gap: 20px; }
-            .demo-col:first-child, .demo-col:last-child { flex: 0 0 auto; width: 100%; max-width: 320px; }
-            .demo-img { height: auto !important; width: 100% !important; }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: rgba(255, 255, 255, 0.3);
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>欢迎使用猪包边框</h1>
+    <h1>猪包边框</h1>
     <div class="subtitle">一键生成自适应模糊边框，打造画廊级质感</div>
 
+    <!-- 上传区域 - 核心功能区 -->
     <div class="upload-area" id="dropZone">
         <svg class="upload-icon" fill="currentColor" viewBox="0 0 24 24">
             <path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/>
         </svg>
-        <span class="upload-text">点击或拖拽图片到这里 (支持批量)</span>
+        <span class="upload-text">点击或拖拽图片到这里 (支持批量上传)</span>
         <button class="upload-btn" onclick="document.getElementById('fileInput').click()">浏览本地文件</button>
         <input type="file" id="fileInput" accept="image/jpeg, image/png" multiple>
     </div>
 
+    <!-- 加载动画 -->
     <div class="loader" id="loader"></div>
 
+    <!-- 效果演示区 -->
     <div id="demoArea" class="demo-area">
         <div class="demo-title">✦ 效果演示 ✦</div>
         <div class="demo-grid">
@@ -336,26 +516,28 @@
             </div>
             <div class="demo-col">
                 <img src="demo_processed.png" alt="效果图" class="demo-img">
-                <div class="img-label" style="background-color: var(--title-color); color: #FFFFFF;">效果 EFFECT</div>
+                <div class="img-label">效果 EFFECT</div>
             </div>
         </div>
         <div class="demo-caption">上传照片，即刻生成同款画廊级质感</div>
     </div>
 
-    <div class="result-container" id="resultContainer">
-        </div>
+    <!-- 处理结果容器 -->
+    <div class="result-container" id="resultContainer"></div>
     
-    <div id="batchDownloadContainer" style="display:none; margin-top: 20px;">
-        <button id="zipBtn" class="download-btn secondary" style="width:100%">
-            📦 电脑端？点此一键打包下载 (.zip)
+    <!-- 批量下载按钮 -->
+    <div id="batchDownloadContainer">
+        <button id="zipBtn" class="download-btn">
+            📦 一键打包下载全部图片 (.zip)
         </button>
     </div>
 
+    <!-- 页脚 -->
     <div class="footer">Designed for Photography · 2026</div>
 </div>
 
 <script>
-    // === 配置参数 ===
+    // === 核心配置参数 ===
     const PARAMS = {
         border_scale: 0.09,
         blur_radius: 50, 
@@ -364,17 +546,21 @@
         shadow_opacity: 0.4
     };
 
+    // === DOM元素获取 ===
     const fileInput = document.getElementById('fileInput');
     const dropZone = document.getElementById('dropZone');
     const resultContainer = document.getElementById('resultContainer');
     const loader = document.getElementById('loader');
     const batchDownloadContainer = document.getElementById('batchDownloadContainer');
     const zipBtn = document.getElementById('zipBtn');
+    const demoArea = document.getElementById('demoArea');
     
     let processedFiles = [];
 
+    // === 事件监听 ===
     fileInput.addEventListener('change', handleFiles);
     
+    // 拖拽上传逻辑
     dropZone.addEventListener('dragover', (e) => {
         e.preventDefault();
         dropZone.classList.add('dragover');
@@ -387,30 +573,31 @@
         if (files.length) processFiles(files);
     });
 
+    // === 核心处理函数 ===
     function handleFiles(e) {
         const files = e.target.files;
         if (files.length) processFiles(files);
     }
 
+    // 批量处理图片
     async function processFiles(files) {
-        // 第一步：隐藏演示区
-        const demoArea = document.getElementById('demoArea');
-        if (demoArea) {
-            demoArea.style.display = 'none';
-        }
+        // 隐藏演示区
+        if (demoArea) demoArea.style.display = 'none';
 
-        // 第二步：清空旧结果并准备加载
+        // 重置状态
         resultContainer.innerHTML = '';
         processedFiles = [];
         batchDownloadContainer.style.display = 'none';
         loader.style.display = 'block';
         
+        // 添加移动端提示
         const tip = document.createElement('div');
         tip.className = 'mobile-tip';
         tip.innerHTML = '💡 手机用户提示：<br>点击下方按钮直接下载，或 <b>长按图片</b> 保存到相册';
         tip.style.display = 'block';
         resultContainer.appendChild(tip);
 
+        // 循环处理每一张图片
         for (let i = 0; i < files.length; i++) {
             const file = files[i];
             if (!file.type.match('image.*')) continue;
@@ -421,21 +608,25 @@
                 processedFiles.push({ name: outputName, data: resultDataUrl });
                 createResultCard(resultDataUrl, outputName, i + 1);
             } catch (err) {
-                console.error("处理出错:", err);
-                alert(`图片 ${file.name} 处理失败`);
+                console.error("图片处理出错:", err);
+                alert(`图片 ${file.name} 处理失败，请重试`);
             }
         }
 
+        // 处理完成
         loader.style.display = 'none';
-        
         if (processedFiles.length > 1) {
             batchDownloadContainer.style.display = 'block';
         }
+        // 清空input，支持重复上传同一张图
+        fileInput.value = '';
     }
 
+    // 单张图片处理核心逻辑
     function processSingleImage(file) {
         return new Promise((resolve, reject) => {
             const img = new Image();
+            img.crossOrigin = 'anonymous';
             img.onload = () => {
                 const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
@@ -444,6 +635,7 @@
                 const origH = img.height;
                 const baseSize = Math.min(origW, origH);
                 
+                // 计算边框宽度
                 let borderWidth = Math.floor(baseSize * PARAMS.border_scale);
                 borderWidth = Math.max(borderWidth, 1);
                 
@@ -453,13 +645,13 @@
                 canvas.width = newW;
                 canvas.height = newH;
 
-                // 1. 绘制模糊背景
+                // 1. 绘制模糊背景层
                 ctx.save();
                 ctx.filter = `blur(${PARAMS.blur_radius}px)`;
                 ctx.drawImage(img, -50, -50, newW + 100, newH + 100);
                 ctx.restore();
 
-                // 2. 绘制贴合阴影
+                // 2. 绘制阴影层
                 ctx.save();
                 ctx.globalAlpha = PARAMS.shadow_opacity;
                 ctx.filter = `blur(${PARAMS.shadow_blur}px)`;
@@ -468,7 +660,7 @@
                 ctx.fill();
                 ctx.restore();
 
-                // 3. 绘制原图
+                // 3. 绘制原图（圆角裁剪）
                 ctx.save();
                 ctx.beginPath();
                 roundRect(ctx, borderWidth, borderWidth, origW, origH, PARAMS.corner_radius);
@@ -483,6 +675,7 @@
         });
     }
 
+    // 圆角矩形工具函数
     function roundRect(ctx, x, y, w, h, r) {
         if (w < 2 * r) r = w / 2;
         if (h < 2 * r) r = h / 2;
@@ -495,15 +688,16 @@
         ctx.closePath();
     }
 
+    // 生成结果卡片
     function createResultCard(dataUrl, name, index) {
         const card = document.createElement('div');
         card.className = 'card';
         card.innerHTML = `
-            <img src="${dataUrl}" class="result-img" alt="处理结果">
+            <img src="${dataUrl}" class="result-img" alt="处理完成的图片">
             <div class="card-controls">
                 <div class="index-badge">#${index}</div>
                 <a href="${dataUrl}" download="${name}" class="download-btn">
-                    <span>⬇️ 保存这张图片</span>
+                    <span>⬇️ 保存图片</span>
                 </a>
             </div>
             <hr class="divider">
@@ -511,9 +705,10 @@
         resultContainer.appendChild(card);
     }
 
+    // 批量打包下载功能
     zipBtn.addEventListener('click', () => {
         if (!window.JSZip) {
-            alert("JSZip 库加载失败，请检查网络或刷新重试");
+            alert("JSZip 库加载失败，请检查网络连接后刷新页面重试");
             return;
         }
         const zip = new JSZip();
@@ -522,7 +717,7 @@
             zip.file(file.name, base64Data, {base64: true});
         });
         zip.generateAsync({type:"blob"}).then(function(content) {
-            saveAs(content, "anan_framed_photos.zip");
+            saveAs(content, "framed_photos_bundle.zip");
         });
     });
 </script>
