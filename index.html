@@ -7,6 +7,56 @@
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🐽</text></svg>">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+    /* === 演示区样式 === */
+        .demo-area {
+            width: 100%;
+            margin-top: 40px;
+            text-align: center;
+        }
+        .demo-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--subtitle-color);
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-bottom: 30px;
+            opacity: 0.8;
+        }
+        .demo-title::before, .demo-title::after {
+            content: "";
+            flex: 1;
+            border-bottom: 1px dashed var(--border-color);
+            margin: 0 15px;
+        }
+        .demo-grid {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+        }
+        .demo-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .demo-img {
+            width: 100%;
+            border: 8px solid #FFFFFF;
+            border-radius: 6px;
+            box-shadow: 0 10px 25px rgba(2, 16, 36, 0.08);
+            pointer-events: none; /* 防止用户误点下载 */
+        }
+        .demo-caption {
+            font-size: 12px;
+            color: var(--subtitle-color);
+            margin-top: 20px;
+            opacity: 0.8;
+        }
+        /* 手机端竖向排列 */
+        @media (max-width: 600px) {
+            .demo-grid { flex-direction: column; }
+        }
     <style>
         /* === 核心样式复刻：深海琉璃版 === */
         :root {
@@ -262,6 +312,20 @@
     <div class="loader" id="loader"></div>
 
     <div class="result-container" id="resultContainer">
+        <div id="demoArea" class="demo-area">
+        <div class="demo-title">✦ 效果演示 ✦</div>
+        <div class="demo-grid">
+            <div class="demo-col">
+                <img src="demo_original.jpg" alt="原图" class="demo-img">
+                <div class="img-label">原图 ORIGINAL</div>
+            </div>
+            <div class="demo-col">
+                <img src="demo_processed.png" alt="效果图" class="demo-img">
+                <div class="img-label" style="background-color: var(--title-color); color: #FFFFFF;">效果 EFFECT</div>
+            </div>
+        </div>
+        <div class="demo-caption">上传照片，即刻生成同款画廊级质感</div>
+    </div>
         </div>
     
     <div id="batchDownloadContainer" style="display:none; margin-top: 20px;">
@@ -322,6 +386,9 @@
         batchDownloadContainer.style.display = 'none';
         loader.style.display = 'block';
 
+        // 👇 加上这一行：当开始处理图片时，隐藏效果演示区
+        document.getElementById('demoArea').style.display = 'none';
+        
         // 显示移动端提示
         const tip = document.createElement('div');
         tip.className = 'mobile-tip';
