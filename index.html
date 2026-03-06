@@ -281,7 +281,7 @@
             for (let i = 0; i < particleCount; i++) {
                 const particle = document.createElement('span');
                 particle.classList.add('boop-particle');
-                particle.textContent = particleIcons[Math.floor(Math.random() * particleIcons.icons)]; 
+                particle.textContent = particleIcons[Math.floor(Math.random() * particleIcons.length)]; 
                 
                 // 确保加载时正确的字体
                 particle.style.fontFamily = 'none';
